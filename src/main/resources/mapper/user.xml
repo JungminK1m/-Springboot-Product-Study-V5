@@ -62,7 +62,7 @@
 		WHERE user_id = #{userId}
 	</update>
 
-	<delete id="deleteById">
+	<delete id="delete">
 		DELETE FROM user_tb WHERE user_id = #{userId}
 	</delete>
 

@@ -71,7 +71,7 @@
         <script>
             function qtyCheck() {
                 let ordersQty = parseInt(document.getElementsByName("ordersQty")[0].value); // 주문수량 150
-                let productQty = parseInt(document.getElementById("productQty")); //재고수량 95
+                let productQty = parseInt(document.getElementById("productQty").innerText); //재고수량 95
 
                 // 반복 코드 줄이기 위해 return false; 를 변수화
                 let ret = false;

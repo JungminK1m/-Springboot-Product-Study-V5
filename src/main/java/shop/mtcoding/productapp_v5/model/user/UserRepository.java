@@ -25,7 +25,7 @@ public interface UserRepository {
 
     public void update(User user);
 
-    public void delete(Integer userId);
+    public int delete(Integer userId);
 
     public User login(LoginDto loginDto);
 

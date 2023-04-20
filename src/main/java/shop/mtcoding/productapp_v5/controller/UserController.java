@@ -1,11 +1,15 @@
 package shop.mtcoding.productapp_v5.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import shop.mtcoding.productapp_v5.dto.user.AdminLoginDto;
@@ -112,6 +116,16 @@ public class UserController {
         return "redirect:/loginForm";
     }
 
+    // 관리자 - 유저 삭제
+    @PostMapping("/deleteUser/{userId}")
+    public String deleteUser(@PathVariable Integer userId) {
+        int result = userRepository.delete(userId);
+        if (result != 1) {
+            throw new CustomException("삭제 실패", HttpStatus.BAD_REQUEST);
+        }
+        return "redirect:/userList";
+    }
+
     @GetMapping("/loginForm")
     public String loginForm() {
         return "user/loginForm";
@@ -132,6 +146,21 @@ public class UserController {
 
         session.invalidate();
         return "redirect:/";
+    }
+
+    @GetMapping("/userList")
+    public String userList(Model model) {
+
+        // 관리자 로그인 한 사람만 접근 가능
+        User principal = (User) session.getAttribute("principal");
+        if (principal == null || !principal.getRole().equals("ADMIN")) {
+            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+        }
+
+        List<User> userList = userRepository.findAll();
+        model.addAttribute("user", userList);
+
+        return "user/userList";
     }
 
 }

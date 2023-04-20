@@ -67,6 +67,9 @@
                                                         <a class="nav-link" href="/productSave">상품등록페이지</a>
                                                     </li>
                                                     <li class="nav-item">
+                                                        <a class="nav-link" href="/userList">유저관리</a>
+                                                    </li>
+                                                    <li class="nav-item">
                                                         <a class="nav-link" href="/logout">로그아웃</a>
                                                     </li>
                                                 </c:otherwise>
