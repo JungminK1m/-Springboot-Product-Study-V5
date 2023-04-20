@@ -6,11 +6,13 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import shop.mtcoding.productapp_v5.dto.user.AdminLoginDto;
 import shop.mtcoding.productapp_v5.dto.user.JoinDto;
@@ -115,6 +117,24 @@ public class UserController {
         userRepository.insert(joinDto);
 
         return "redirect:/loginForm";
+    }
+
+    // 유저네임 중복체크 컨트롤러
+    @PostMapping("/join/checkName")
+    public ResponseEntity<?> CheckUsername(@RequestParam String userName) {
+
+        // 디버깅
+        System.out.println("userName : " + userName);
+
+        // DB에 중복이 된 값이 있는 지 확인
+        User un = userRepository.findByUserName(userName);
+
+        if (un != null) {
+            // pn이 있다면 flase 반환
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+        // pn == null 기존에 없던 유저이기 때문에 true 반환
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     // 관리자 - 유저 삭제

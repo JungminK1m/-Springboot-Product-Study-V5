@@ -52,7 +52,7 @@
 
 	<select id="findAll"
 		resultType="shop.mtcoding.productapp_v5.model.user.User">
-		SELECT * FROM user_tb ORDER BY user_id DESC
+		SELECT * FROM user_tb ORDER BY user_id
 	</select>
 
 
