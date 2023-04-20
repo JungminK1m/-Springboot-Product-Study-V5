@@ -2,11 +2,15 @@ package shop.mtcoding.productapp_v5.model.user;
 
 import java.sql.Timestamp;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     private Integer userId;
@@ -24,4 +28,5 @@ public class User {
         // 거르기 위해서 사용!! -> JoinDto > toEntity에서 적어준 값으로 들어감
         // 예시 ) this.role = "USER"; // 무조건 USER로 값이 들어감
     }
+
 }

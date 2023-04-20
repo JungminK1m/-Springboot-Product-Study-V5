@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import shop.mtcoding.productapp_v5.dto.user.AdminLoginDto;
 import shop.mtcoding.productapp_v5.dto.user.JoinDto;
 import shop.mtcoding.productapp_v5.dto.user.LoginDto;
+import shop.mtcoding.productapp_v5.dto.user.UpdateUserDto;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
 import shop.mtcoding.productapp_v5.model.user.User;
 import shop.mtcoding.productapp_v5.model.user.UserRepository;
@@ -124,6 +125,19 @@ public class UserController {
             throw new CustomException("삭제 실패", HttpStatus.BAD_REQUEST);
         }
         return "redirect:/userList";
+    }
+
+    @PostMapping("/userInfoUpdate")
+    public String userInfoUpdate(UpdateUserDto updateUserDto) {
+
+        User principal = (User) session.getAttribute("principal");
+        if (principal == null) {
+            throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        userRepository.update(updateUserDto.toEntity(principal.getUserId()));
+
+        return "redirect:/userInfo";
     }
 
     // 로그인 페이지
