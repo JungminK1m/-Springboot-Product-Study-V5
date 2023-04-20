@@ -126,16 +126,19 @@ public class UserController {
         return "redirect:/userList";
     }
 
+    // 로그인 페이지
     @GetMapping("/loginForm")
     public String loginForm() {
         return "user/loginForm";
     }
 
+    // 회원가입 페이지
     @GetMapping("/joinForm")
     public String joinForm() {
         return "user/joinForm";
     }
 
+    // 관리자 - 로그인 페이지
     @GetMapping("/adminLoginForm")
     public String adminLoginForm() {
         return "user/adminLoginForm";
@@ -148,6 +151,7 @@ public class UserController {
         return "redirect:/";
     }
 
+    // 관리자 - 유저 목록 페이지
     @GetMapping("/userList")
     public String userList(Model model) {
 

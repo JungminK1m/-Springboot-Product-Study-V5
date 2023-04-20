@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import shop.mtcoding.productapp_v5.dto.orders.AdminOrdersListDto;
 import shop.mtcoding.productapp_v5.dto.orders.OrdersDto;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
 import shop.mtcoding.productapp_v5.model.orders.Orders;
@@ -87,6 +88,7 @@ public class OrdersController {
 
     }
 
+    // 유저 - 구매 취소하기
     @PostMapping("/ordersList/delete")
     public String deleteOrder(Integer ordersId, Integer productId) {
 
@@ -114,5 +116,21 @@ public class OrdersController {
         ordersRepository.deleteById(ordersId);
 
         return "redirect:/ordersList/" + userId;
+    }
+
+    // 관리자 - 유저 구매 목록 확인 페이지
+    @GetMapping("/adminOrdersList")
+    public String adminOrdersList(Model model) {
+
+        // 관리자 로그인 한 사람만 접근 가능
+        User principal = (User) session.getAttribute("principal");
+        if (principal == null || !principal.getRole().equals("ADMIN")) {
+            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+        }
+
+        List<AdminOrdersListDto> orderedList = ordersRepository.adminFindALl();
+        model.addAttribute("orderedList", orderedList);
+
+        return "orders/adminOrdersList";
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import shop.mtcoding.productapp_v5.dto.orders.AdminOrdersListDto;
 import shop.mtcoding.productapp_v5.dto.orders.OrdersDto;
 
 @Mapper
@@ -15,7 +16,11 @@ public interface OrdersRepository {
 
     public Orders findById(Integer ordersId);
 
+    // 해당 userId를 가진 유저의 구매목록 전체를 보여줌
     public List<Orders> findAll(Integer usersId);
+
+    // 관리자가 전체 유저의 구매목록을 보여줌
+    public List<AdminOrdersListDto> adminFindALl();
 
     public void orderUpdatebyProductQty(Orders orders);
 

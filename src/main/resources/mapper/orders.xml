@@ -16,6 +16,14 @@
 		WHERE user_id=#{userId}
 	</select>
 
+	<select id="adminFindALl"
+		resultType="shop.mtcoding.productapp_v5.dto.orders.AdminOrdersListDto">
+		SELECT u.user_name, o.orders_name, o.orders_price, o.orders_qty, o.created_at
+		FROM user_tb u LEFT JOIN orders_tb o
+		ON u.user_id = o.user_id
+		WHERE o.orders_qty > 0
+	</select>
+
 	<insert id="insert">
 		INSERT INTO orders_tb (orders_name, orders_price, orders_qty, product_id, user_id, created_at)
 		VALUES(#{ordersDto.ordersName}, #{ordersDto.ordersPrice}, #{ordersDto.ordersQty}, #{ordersDto.productId}, #{userId}, NOW())
