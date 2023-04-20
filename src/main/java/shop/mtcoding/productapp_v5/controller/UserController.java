@@ -137,7 +137,29 @@ public class UserController {
 
         userRepository.update(updateUserDto.toEntity(principal.getUserId()));
 
+        // 기존에 로그인 되어있던 정보 없애기 위해서 세션 삭제
+        session.invalidate();
+
         return "redirect:/userInfo";
+    }
+
+    @PostMapping("/deleteUser")
+    public String deleteUser() {
+
+        User principal = (User) session.getAttribute("principal");
+        if (principal == null) {
+            throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        int result = userRepository.delete(principal.getUserId());
+        if (result != 1) {
+            throw new CustomException("삭제 실패", HttpStatus.BAD_REQUEST);
+        }
+
+        // 기존에 로그인 되어있던 정보 없애기 위해서 세션 삭제
+        session.invalidate();
+
+        return "redirect:/";
     }
 
     // 로그인 페이지

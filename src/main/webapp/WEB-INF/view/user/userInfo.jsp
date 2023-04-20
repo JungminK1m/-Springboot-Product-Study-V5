@@ -29,7 +29,7 @@
                         <button
                             style="width: 240px; height: 50px; margin-right: 20px; background-color: rgb(255, 210, 199);">수정하기</button>
                     </form>
-                    <form action="회원탈퇴 주소" method="post">
+                    <form action="/deleteUser" method="post">
                         <button
                             style="width: 240px; height: 50px; margin: auto; background-color: rgb(250, 255, 182);">탈퇴하기</button>
                     </form>
