@@ -2,33 +2,33 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="shop.mtcoding.productapp_v4.model.user.UserRepository">
+<mapper namespace="shop.mtcoding.productapp_v5.model.user.UserRepository">
 
 	<select id="findByUserName"
-		resultType="shop.mtcoding.productapp_v4.model.user.User">
+		resultType="shop.mtcoding.productapp_v5.model.user.User">
 		SELECT * FROM user_tb WHERE user_name = #{userName}
 	</select>
 
 	<select id="findByUsernameAndPassword"
-		resultType="shop.mtcoding.productapp_v4.model.user.User">
+		resultType="shop.mtcoding.productapp_v5.model.user.User">
 		SELECT * FROM user_tb WHERE user_name = #{userName} and user_password = #{userPassword}
 	</select>
 
 	<select id="findByUserEmail"
-		resultType="shop.mtcoding.productapp_v4.model.user.User">
+		resultType="shop.mtcoding.productapp_v5.model.user.User">
 		SELECT * FROM user_tb WHERE user_email = #{userEmail}
 	</select>
 
 
 	<select id="findById"
-		resultType="shop.mtcoding.productapp_v4.model.user.User">
+		resultType="shop.mtcoding.productapp_v5.model.user.User">
 		SELECT * FROM user_tb WHERE user_id = #{userId}
 
 	</select>
 
 	<!-- 구매자 로그인 -->
 	<!-- 구매자도 role을 적어줘야 구매자 페이지에서 관리자 로그인 시 튕김 -->
-	<select id="login" resultType="shop.mtcoding.productapp_v4.model.user.User">
+	<select id="login" resultType="shop.mtcoding.productapp_v5.model.user.User">
 		SELECT * FROM user_tb
 		where user_name=#{userName}
 		AND user_password=#{userPassword}
@@ -36,7 +36,7 @@
 	</select>
 
 	<!-- 관리자 로그인 -->
-	<select id="adminLogin" resultType="shop.mtcoding.productapp_v4.model.user.User">
+	<select id="adminLogin" resultType="shop.mtcoding.productapp_v5.model.user.User">
 		SELECT * FROM user_tb
 		where user_name=#{userName}
 		AND user_password=#{userPassword}
@@ -51,7 +51,7 @@
 
 
 	<select id="findAll"
-		resultType="shop.mtcoding.productapp_v4.model.user.User">
+		resultType="shop.mtcoding.productapp_v5.model.user.User">
 		SELECT * FROM user_tb ORDER BY user_id DESC
 	</select>
 
