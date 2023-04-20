@@ -56,6 +56,9 @@
                                                     <a class="nav-link" href="/ordersList/${principal.userId}">주문조회</a>
                                                 </li>
                                                 <li class="nav-item">
+                                                    <a class="nav-link" href="/userInfo">마이페이지</a>
+                                                </li>
+                                                <li class="nav-item">
                                                     <a class="nav-link" href="/logout">로그아웃</a>
                                                 </li>
                                             </c:when>
@@ -71,6 +74,9 @@
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" href="/adminOrdersList">유저구매목록</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" href="/userInfo">마이페이지</a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" href="/logout">로그아웃</a>

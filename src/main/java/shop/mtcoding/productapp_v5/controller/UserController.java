@@ -167,4 +167,39 @@ public class UserController {
         return "user/userList";
     }
 
+    // 관리자,유저 - 회원정보 페이지(마이페이지)
+    @GetMapping("/userInfo")
+    public String userInfo(Model model) {
+
+        // 세션에 저장된 값을 들고오면 주소값에 @PathVariable을 쓰지 않아도 됨
+        // 세션에 있는 사람 (=로그인 한 사람)만 접근 가능
+        User principal = (User) session.getAttribute("principal");
+        if (principal == null) {
+            throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        // 세션에 저장된 Id 값으로 본인 정보 불러와서 모델에 담기
+        User userPS = userRepository.findById(principal.getUserId());
+        model.addAttribute("user", userPS);
+
+        return "user/userInfo";
+    }
+
+    @GetMapping("/userUpdateForm")
+    public String userUpdateForm(Model model) {
+
+        // 세션에 저장된 값을 들고오면 주소값에 @PathVariable을 쓰지 않아도 됨
+        // 세션에 있는 사람 (=로그인 한 사람)만 접근 가능
+        User principal = (User) session.getAttribute("principal");
+        if (principal == null) {
+            throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        // 세션에 저장된 Id 값으로 본인 정보 불러와서 모델에 담기
+        User userPS = userRepository.findById(principal.getUserId());
+        model.addAttribute("user", userPS);
+
+        return "user/userUpdate";
+    }
+
 }
