@@ -12,8 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import shop.mtcoding.productapp_v5.dto.ResponseDto;
 import shop.mtcoding.productapp_v5.dto.user.AdminLoginDto;
 import shop.mtcoding.productapp_v5.dto.user.JoinDto;
 import shop.mtcoding.productapp_v5.dto.user.LoginDto;
@@ -166,6 +169,23 @@ public class UserController {
 
         return "redirect:/userInfo";
     }
+
+    // 유저 정보 수정 AJAX 통신 만드는 중
+    // @PostMapping("/userInfoUpdate")
+    // public @ResponseBody ResponseDto<?> userInfoUpdate(@RequestBody UpdateUserDto
+    // updateUserDto) {
+
+    // User principal = (User) session.getAttribute("principal");
+    // if (principal == null) {
+    // throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.BAD_REQUEST);
+    // }
+
+    // userRepository.update(updateUserDto.toEntity(principal.getUserId()));
+
+    // session.invalidate();
+
+    // return new ResponseDto<>(1, "회원 수정 완료", null);
+    // }
 
     @PostMapping("/deleteUser")
     public String deleteUser() {
