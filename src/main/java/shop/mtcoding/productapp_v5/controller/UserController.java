@@ -19,6 +19,7 @@ import shop.mtcoding.productapp_v5.dto.user.JoinDto;
 import shop.mtcoding.productapp_v5.dto.user.LoginDto;
 import shop.mtcoding.productapp_v5.dto.user.UpdateUserDto;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
+import shop.mtcoding.productapp_v5.handler.exception.JoinCustomException;
 import shop.mtcoding.productapp_v5.model.user.User;
 import shop.mtcoding.productapp_v5.model.user.UserRepository;
 
@@ -97,13 +98,16 @@ public class UserController {
 
         // 유효성 체크
         if (joinDto.getUserName().isEmpty()) {
-            throw new CustomException("username을 입력해 주세요.", HttpStatus.BAD_REQUEST);
+            // System.out.println("JoinCustomException - userName 실행됨");
+            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
         }
         if (joinDto.getUserPassword().isEmpty()) {
-            throw new CustomException("password를 입력해 주세요.", HttpStatus.BAD_REQUEST);
+            // System.out.println("JoinCustomException - userPassword 실행됨");
+            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
         }
         if (joinDto.getUserEmail().isEmpty()) {
-            throw new CustomException("email을 입력해 주세요.", HttpStatus.BAD_REQUEST);
+            // System.out.println("JoinCustomException - userEmail 실행됨");
+            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
         }
 
         // 기존 동일 유저 확인 (username,email만)

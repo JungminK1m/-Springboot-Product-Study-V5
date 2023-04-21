@@ -7,7 +7,7 @@
                     <input
                         type="text"
                         class="form-control"
-                        placeholder="아이디"
+                        placeholder="유저이름"
                         id="name"
                         name="userName"
                     />
@@ -51,6 +51,16 @@
                 // 이렇게 데이터를 변수로 만들면 보기가 편하다
                 let data = { userName: $('#name').val() }
 
+                if(blankUserName() == true){
+                    alert("이름을 입력해 주세요.");
+                    return; // 조건문을 빠져나가기 위해
+                }
+
+                if (onlyEng() == false) {
+                    alert("이름은 영어로 입력해주세요")
+                    return;
+                }
+
                 $.ajax({
                     url: '/join/checkName/',
                     type: 'post',
@@ -85,6 +95,27 @@
             // 동일 유저 등록하지 못하게 처리하는 이벤트 (최종 회원가입 버튼)
             // form이 submit 될 때 실행되는 이벤트
             $('form').on('submit', function(e) {
+                
+                if(blankUserName() == true){
+                    alert("아이디를 입력해주세요");
+                    return;
+                }
+                
+                if(blankUserPassword() == true){
+                    alert("비밀번호를 입력해주세요");
+                    return;
+                }
+                
+                if (emailCheck() == false) {
+                    alert("이메일 형식을 지켜주세요")
+                    return;
+                }
+
+                if (onlyEng() == false) {
+                    alert("이름은 영어로 입력해주세요")
+                    return;
+                }
+                
                 // == 주의
                 if (sameCheck == false) {
                     alert("이름 중복체크 해주세요.");
@@ -96,7 +127,49 @@
                     alert("회원가입 완료.");
                     console.log(sameCheck);
                 }
-            });
+            }
+            
+            );
+
+            function blankUserName() {	// 아이디 공백 || 띄어쓰기 막아줌
+            let username = $("#name").val();
+            let blank = /\s/g;
+            if(!username || blank.test(username)){
+            return true;
+                }
+            }
+
+            function blankUserPassword() {	// 비밀번호 공백 || 띄어쓰기 막아줌
+            let userpw = $("#password").val();
+            let blank = /\s/g;
+            if(!userpw || blank.test(userpw)){
+                return true;
+                }
+            }
+
+            function emailCheck() {	// email 형식
+            let email = $("#email").val();
+            let emailRule = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+            if (emailRule.test(email)) {
+                return true;
+            } else {
+                return false;
+                }
+            }
+
+            function onlyEng() {	// 영어만 입력 가능
+                let username = $("#name").val();
+                let capiRule = /^[a-zA-Z]+$/;
+                /* /^[a-zA-Z]+$  <- 영어만! 포함하게 하는 정규식
+                * /[a-zA-Z]/ 와 다르다.
+                * /[a-zA-Z]/ 정규식은 "Hello, World!"와 같은 문자열에서도 매치되지만, "/^[a-zA-Z]+$/" 정규식은 "HelloWorld"와 같은 문자열에서만 매치됨.
+                */
+                if (capiRule.test(username)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         </script>
 
     <%@ include file="../layout/footer.jsp" %>

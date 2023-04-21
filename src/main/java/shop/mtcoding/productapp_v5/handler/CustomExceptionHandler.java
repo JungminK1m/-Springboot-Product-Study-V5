@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
+import shop.mtcoding.productapp_v5.handler.exception.JoinCustomException;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -25,6 +26,18 @@ public class CustomExceptionHandler {
         return sb.toString();
     }
 
-    // Dto를 응답
+    /*
+     * 기존 CustomException은 핸들러에서 alert 창을 띄우기 때문에, alert창을 안 띄우는 새로운 Exception을
+     * 생성했다.
+     * history.back이 있어야 회원가입 시에 예외가 생겨도 기존에 썼던 값이 지워지지 않기 때문에 만듦!
+     */
+    @ExceptionHandler(JoinCustomException.class)
+    public String basicException2(Exception e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<script>");
+        sb.append("history.back();");
+        sb.append("</script>");
+        return sb.toString();
+    }
 
 }
