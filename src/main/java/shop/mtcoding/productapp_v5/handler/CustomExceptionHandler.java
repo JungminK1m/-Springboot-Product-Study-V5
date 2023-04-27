@@ -39,5 +39,4 @@ public class CustomExceptionHandler {
         sb.append("</script>");
         return sb.toString();
     }
-
 }

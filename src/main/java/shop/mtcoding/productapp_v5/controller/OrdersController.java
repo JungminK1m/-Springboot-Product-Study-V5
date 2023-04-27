@@ -128,7 +128,7 @@ public class OrdersController {
             throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
         }
 
-        List<AdminOrdersListDto> orderedList = ordersRepository.adminFindALl();
+        List<AdminOrdersListDto> orderedList = ordersRepository.adminFindAll();
         model.addAttribute("orderedList", orderedList);
 
         return "orders/adminOrdersList";

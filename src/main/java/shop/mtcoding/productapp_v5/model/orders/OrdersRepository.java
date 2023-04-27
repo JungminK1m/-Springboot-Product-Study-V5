@@ -20,7 +20,7 @@ public interface OrdersRepository {
     public List<Orders> findAll(Integer usersId);
 
     // 관리자가 전체 유저의 구매목록을 보여줌
-    public List<AdminOrdersListDto> adminFindALl();
+    public List<AdminOrdersListDto> adminFindAll();
 
     public void orderUpdatebyProductQty(Orders orders);
 

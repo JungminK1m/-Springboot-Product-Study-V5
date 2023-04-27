@@ -5,23 +5,24 @@
             <form action="/userInfoUpdate" method="post">
                 <div class="mb-3 mt-3">
                     유저 이름 :
-                    <input id="userName" type="text" value="${user.userName}" readonly="readonly">
+                    <input name="userName" type="text" value="${user.userName}" readonly="readonly">
                 </div>
                 <div class="mb-3 mt-3">
                     비밀번호 :
-                    <input id="userPassword" type="password" value="${user.userPassword}" placeholder="변경할 비밀번호">
+                    <input name="userPassword" type="password" value="${user.userPassword}" placeholder="변경할 비밀번호">
                 </div>
                 <div class="mb-3 mt-3">
                     이메일 :
-                    <input id="userEmail" type="email" value="${user.userEmail}" placeholder="변경할 이메일주소">
+                    <input name="userEmail" type="email" value="${user.userEmail}" placeholder="변경할 이메일주소">
                 </div>
-                <button id="btnUpdateProfile" type="button" class="btn btn-primary">회원수정완료</button>
+                <button id="btnUpdateProfile" type="submit" class="btn btn-primary">회원수정완료</button>
 
             </form>
         </div>
 
         
-    <script>
+    <%-- <script>
+    // 쓸 때 input name 속성 id로 바꾸기!!!!!!!
 
     function updateUserInfo() {
 
@@ -51,6 +52,6 @@
     }
 
     
-    </script>
+    </script> --%>
 
     <%@ include file="../layout/footer.jsp" %>

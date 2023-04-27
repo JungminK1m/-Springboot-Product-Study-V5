@@ -24,8 +24,6 @@
                             <td>${user.userEmail}</td>
                             <td>${user.role}</td>
                             <td>${user.createdAt}</td>
-                            <%-- 년,월,일,시,분 까지만 표시하기 --%>
-                            <%-- <td><fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd HH:mm"/></td> --%>
                             <td>
                                 <form action="/deleteUser/${user.userId}" method="post">
                                     <button class="btn btn-secondary btn-sm" type="submit">회원삭제</button>

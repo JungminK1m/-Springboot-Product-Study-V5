@@ -19,4 +19,9 @@ public class UpdateUserDto {
         return user;
     }
 
+    // public User toEntity(Integer userId) {
+    // User user = new User(this.userPassword, this.userEmail, userId);
+    // return user;
+    // }
+
 }

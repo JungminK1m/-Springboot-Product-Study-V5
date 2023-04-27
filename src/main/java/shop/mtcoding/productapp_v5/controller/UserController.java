@@ -12,11 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import shop.mtcoding.productapp_v5.dto.ResponseDto;
 import shop.mtcoding.productapp_v5.dto.user.AdminLoginDto;
 import shop.mtcoding.productapp_v5.dto.user.JoinDto;
 import shop.mtcoding.productapp_v5.dto.user.LoginDto;
@@ -52,11 +49,6 @@ public class UserController {
         if (userPS != null && userPS.getRole().equals("USER")) {
             session.setAttribute("principal", userPS);
 
-            System.out.println("userName : " + userPS.getUserName());
-            System.out.println("userPassword : " + userPS.getUserPassword());
-            System.out.println("Role : " + userPS.getRole());
-            System.out.println("user 로그인 성공");
-
             // 로그인 성공
             return "redirect:/product";
 
@@ -83,16 +75,11 @@ public class UserController {
 
             session.setAttribute("principal", userPS);
 
-            System.out.println("adminName : " + userPS.getUserName());
-            System.out.println("adminPassword : " + userPS.getUserPassword());
-            System.out.println("Role : " + userPS.getRole());
-            System.out.println("admin 로그인 성공");
-
             // 로그인 성공
             return "redirect:/product";
         }
         // 로그인 실패
-        return "redirect:/adminLoginForm";
+        throw new CustomException("아이디와 비밀번호를 확인해 주세요", HttpStatus.BAD_REQUEST);
 
     }
 
@@ -147,6 +134,13 @@ public class UserController {
     // 관리자 - 유저 삭제
     @PostMapping("/deleteUser/{userId}")
     public String deleteUser(@PathVariable Integer userId) {
+
+        // 관리자 로그인 한 사람만 접근 가능
+        User principal = (User) session.getAttribute("principal");
+        if (principal == null || !principal.getRole().equals("ADMIN")) {
+            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+        }
+
         int result = userRepository.delete(userId);
         if (result != 1) {
             throw new CustomException("삭제 실패", HttpStatus.BAD_REQUEST);
@@ -164,8 +158,8 @@ public class UserController {
 
         userRepository.update(updateUserDto.toEntity(principal.getUserId()));
 
-        // 기존에 로그인 되어있던 정보 없애기 위해서 세션 삭제
-        session.invalidate();
+        // 업데이트 하면 세션을 지워야 함! <- 근데 이상하게 흘러가서 AJAX 요청할 때 제대로 하기
+        // session.invalidate();
 
         return "redirect:/userInfo";
     }
@@ -187,6 +181,7 @@ public class UserController {
     // return new ResponseDto<>(1, "회원 수정 완료", null);
     // }
 
+    // 구매자/관리자 - 회원 탈퇴하기
     @PostMapping("/deleteUser")
     public String deleteUser() {
 
