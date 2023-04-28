@@ -22,8 +22,7 @@
 
         
     <script>
-    // 쓸 때 input name 속성 id로 바꾸기!!!!!!!
-
+    // 회원 정보 수정 AJAX
     $("#btnUpdateProfile").click(()=>{
     userUpdate();
     });

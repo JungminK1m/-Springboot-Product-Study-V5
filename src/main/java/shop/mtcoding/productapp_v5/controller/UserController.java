@@ -151,25 +151,7 @@ public class UserController {
         return "redirect:/userList";
     }
 
-    // 유저 정보 수정
-    // @PostMapping("/userInfoUpdate")
-    // public String userInfoUpdate(UpdateUserDto updateUserDto) {
-
-    // User principal = (User) session.getAttribute("principal");
-    // if (principal == null) {
-    // throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.BAD_REQUEST);
-    // }
-
-    // userRepository.update(updateUserDto.toEntity(principal.getUserId()));
-
-    // // 업데이트 하면 세션을 지워야 함! <- 근데 이상하게 흘러가서 AJAX 요청할 때 제대로 하기
-    // // session.invalidate();
-
-    // return "redirect:/userInfo";
-    // }
-
-    // 유저 정보 수정 AJAX 통신 만드는 중
-    // 유저 정보 수정
+    // 유저 정보 수정 AJAX
     @PostMapping("/userInfoUpdate")
     public @ResponseBody ResponseDto<?> userUpdate(@RequestBody UpdateUserDto updateUserDto) {
         User principal = (User) session.getAttribute("principal");
@@ -177,24 +159,13 @@ public class UserController {
         return new ResponseDto<>(1, "회원정보수정성공", null);
     }
 
-    // 구매자/관리자 - 회원 탈퇴하기
+    // 회원 탈퇴 AJAX
     @PostMapping("/deleteUser")
-    public String deleteUser() {
-
+    public @ResponseBody ResponseDto<?> userDelete() {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.BAD_REQUEST);
-        }
-
         int result = userRepository.delete(principal.getUserId());
-        if (result != 1) {
-            throw new CustomException("삭제 실패", HttpStatus.BAD_REQUEST);
-        }
-
-        // 기존에 로그인 되어있던 정보 없애기 위해서 세션 삭제
         session.invalidate();
-
-        return "redirect:/";
+        return new ResponseDto<>(1, "회원탈퇴성공", null);
     }
 
     // 로그인 페이지
