@@ -15,12 +15,12 @@ CREATE TABLE product_tb(
 	created_at TIMESTAMP NOT null
 );
 
-create table orders_tb(
-    orders_id int primary KEY auto_increment,
+CREATE TABLE orders_tb(
+    orders_id INT PRIMARY KEY auto_increment,
     orders_name varchar(20) NOT null,
-    orders_price int NOT null,
-    orders_qty int NOT null,
-    product_id int NOT null,
-    user_id int NOT null,
+    orders_price INT NOT null,
+    orders_qty INT NOT null,
+    product_id INT NOT null,
+    user_id INT NOT null,
     created_at TIMESTAMP
 );
