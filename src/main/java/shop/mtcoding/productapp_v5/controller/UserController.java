@@ -61,7 +61,7 @@ public class UserController {
     }
 
     // 관리자 로그인
-    @PostMapping("/adminLogin")
+    @PostMapping("admin/login")
     public String adminLogin(AdminLoginDto adminLoginDto) {
 
         // 유효성 체크
@@ -135,7 +135,7 @@ public class UserController {
     }
 
     // 관리자 - 유저 삭제
-    @PostMapping("/deleteUser/{userId}")
+    @PostMapping("admin/deleteUser/{userId}")
     public String deleteUser(@PathVariable Integer userId) {
 
         // 관리자 로그인 한 사람만 접근 가능
@@ -181,7 +181,7 @@ public class UserController {
     }
 
     // 관리자 - 로그인 페이지
-    @GetMapping("/adminLoginForm")
+    @GetMapping("admin/loginForm")
     public String adminLoginForm() {
         return "user/adminLoginForm";
     }
@@ -194,7 +194,7 @@ public class UserController {
     }
 
     // 관리자 - 유저 목록 페이지
-    @GetMapping("/userList")
+    @GetMapping("admin/userList")
     public String userList(Model model) {
 
         // 관리자 로그인 한 사람만 접근 가능

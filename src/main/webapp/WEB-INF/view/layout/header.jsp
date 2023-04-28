@@ -46,7 +46,7 @@
                                                 <a class="nav-link" href="/loginForm">구매자 로그인</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="/adminLoginForm">관리자 로그인</a>
+                                                <a class="nav-link" href="/admin/loginForm">관리자 로그인</a>
                                             </li>
                                         </c:when>
 
@@ -67,13 +67,13 @@
                                             <%-- ${principal.role=='ADMIN' } 일 때 헤더 --%>
                                                 <c:otherwise>
                                                     <li class="nav-item">
-                                                        <a class="nav-link" href="/productSave">상품등록페이지</a>
+                                                        <a class="nav-link" href="/admin/productSave">상품등록페이지</a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a class="nav-link" href="/userList">유저관리</a>
+                                                        <a class="nav-link" href="/admin/userList">유저관리</a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a class="nav-link" href="/adminOrdersList">유저구매목록</a>
+                                                        <a class="nav-link" href="/admin/userOrdersList">유저구매목록</a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" href="/userInfo">마이페이지</a>

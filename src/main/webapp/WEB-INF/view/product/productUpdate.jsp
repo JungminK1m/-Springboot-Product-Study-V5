@@ -2,7 +2,7 @@
     <%@ include file="../layout/header.jsp" %>
 
         <div class="container">
-            <form action="/product/${productId}/update" method="post">
+            <form action="sadmin/product/${productId}/update" method="post">
                 <div class="mb-3 mt-3">
                     상품명 :
                     <input id="name" name="productName" type="text" value="${product.productName}" placeholder="상품명을 적어주세요">

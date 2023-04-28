@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     // 상품 등록 페이지
-    @GetMapping("/productSave")
+    @GetMapping("admin/productSave")
     public String productSave() {
 
         // 관리자 로그인 한 사람만 구매할 수 있음
@@ -64,7 +64,7 @@ public class ProductController {
     }
 
     // 상품 수정 페이지
-    @GetMapping("/productUpdate")
+    @GetMapping("admin/productUpdate")
     public String productUpdate() {
 
         // 관리자 로그인 한 사람만 업데이트 할 수 있음
@@ -77,7 +77,7 @@ public class ProductController {
     }
 
     // 상품 등록
-    @PostMapping("/product/save")
+    @PostMapping("admin/product/save")
     public String save(ProductSaveDto productSaveDto) {
 
         // 관리자 로그인 한 사람만 상품 등록할 수 있음
@@ -140,7 +140,7 @@ public class ProductController {
     }
 
     // 상품 수정 페이지
-    @GetMapping("/product/{productId}/updateForm")
+    @GetMapping("admin/product/{productId}/updateForm")
     public String productUpdate(@PathVariable Integer productId, Model model) {
 
         // 관리자 로그인 한 사람만 상품 수정 가능
@@ -158,7 +158,7 @@ public class ProductController {
     }
 
     // 상품 수정
-    @PostMapping("/product/{productId}/update")
+    @PostMapping("admin/product/{productId}/update")
     public String update(@PathVariable Integer productId, Model model, ProductUpdateDto productUpdateDto) {
 
         System.out.println("디버깅 : " + productId);
@@ -199,7 +199,7 @@ public class ProductController {
     }
 
     // 상품 삭제
-    @PostMapping("/product/{ProductId}/delete")
+    @PostMapping("admin/product/{ProductId}/delete")
     public String delete(@PathVariable Integer ProductId) {
         int result = productRepository.deleteById(ProductId);
         if (result != 1) {

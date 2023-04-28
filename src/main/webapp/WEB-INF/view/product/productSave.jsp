@@ -2,7 +2,7 @@
     <%@ include file="../layout/header.jsp" %>
 
         <div class="container">
-            <form action="/product/save" method="post">
+            <form action="/admin/product/save" method="post">
                 <div class="mb-3 mt-3">
                     상품명 : <input id="name" name="productName" type="text" placeholder="상품명을 적어주세요">
                     <button id="CheckproductName" type="button">중복확인</button>

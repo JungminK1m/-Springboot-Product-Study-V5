@@ -25,7 +25,7 @@
                             <td>${user.role}</td>
                             <td>${user.createdAt}</td>
                             <td>
-                                <form action="/deleteUser/${user.userId}" method="post">
+                                <form action="admin/deleteUser/${user.userId}" method="post">
                                     <button class="btn btn-secondary btn-sm" type="submit">회원삭제</button>
                                 </form>
                             </td>

@@ -2,7 +2,7 @@
     <%@ include file="../layout/header.jsp" %>
 
         <div class="container">
-            <form action="/adminLogin" method="post" name="form">
+            <form action="/admin/login" method="post" name="form">
             
                 <div class="mb-3 mt-3">
                     <input type="text" class="form-control" placeholder="username" name="userName" value="admin" />

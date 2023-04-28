@@ -119,7 +119,7 @@ public class OrdersController {
     }
 
     // 관리자 - 유저 구매 목록 확인 페이지
-    @GetMapping("/adminOrdersList")
+    @GetMapping("admin/userOrdersList")
     public String adminOrdersList(Model model) {
 
         // 관리자 로그인 한 사람만 접근 가능
