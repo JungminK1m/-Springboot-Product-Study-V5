@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import shop.mtcoding.productapp_v5.dto.product.ProductReqDto.ProductSaveDto;
 import shop.mtcoding.productapp_v5.dto.product.ProductReqDto.ProductUpdateDto;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
+import shop.mtcoding.productapp_v5.handler.exception.JoinCustomException;
 import shop.mtcoding.productapp_v5.model.product.Product;
 import shop.mtcoding.productapp_v5.model.product.ProductRepository;
 import shop.mtcoding.productapp_v5.model.user.User;
@@ -83,6 +84,25 @@ public class ProductController {
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
             throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+        }
+
+        // 유효성 체크
+        if (productSaveDto.getProductName().isEmpty()) {
+            // System.out.println("JoinCustomException - userName 실행됨");
+            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
+        }
+        if (productSaveDto.getProductPrice() == null) {
+            // System.out.println("JoinCustomException - userPassword 실행됨");
+            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
+        }
+        if (productSaveDto.getProductQty() == null) {
+            // System.out.println("JoinCustomException - userEmail 실행됨");
+            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
+        }
+
+        // 기존 동일 상품 확인 (username,email만)
+        if (productRepository.findByName(productSaveDto.getProductName()) != null) {
+            throw new CustomException("이미 등록한 상품입니다.", HttpStatus.BAD_REQUEST);
         }
 
         // 새로운 상품 등록(insert)

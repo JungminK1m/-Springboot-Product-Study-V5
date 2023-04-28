@@ -10,14 +10,14 @@
                 </div>
 
                 <div class="mb-3 mt-3">
-                    상품가격 : <input id="price" name="productPrice" type="text" placeholder="상품 가격을 적어주세요">
+                    상품가격 : <input id="price" name="productPrice" type="number" placeholder="상품 가격을 적어주세요">
                 </div>
 
                 <div class="mb-3 mt-3">
-                    상품수량 : <input id="qty" name="productQty" type="text" placeholder="상품 수량을 적어주세요">
+                    상품수량 : <input id="qty" name="productQty" type="number" placeholder="상품 수량을 적어주세요">
                 </div>
 
-                <button id="submit" type="submit" class="btn btn-primary">상품등록완료</button>
+                <button id="btnSaveProduct" type="submit" class="btn btn-primary">상품등록완료</button>
             </form>
         </div>
 
@@ -31,6 +31,11 @@
 
                 // 이렇게 데이터를 변수로 만들면 보기가 편하다
                 let data = { productName: $('#name').val() }
+
+                if(blankProductName() == true){
+                    alert("상품명을 입력해주세요");
+                    return;
+                }
 
                 $.ajax({
                     url: '/productSave/checkName/',
@@ -66,6 +71,22 @@
             // 동일 상품명 등록하지 못하게 처리하는 이벤트 (최종 상품 등록 버튼)
             // form이 submit 될 때 실행되는 이벤트
             $('form').on('submit', function(e) {
+
+                if(blankProductName() == true){
+                    alert("상품명을 입력해주세요");
+                    return;
+                }
+                
+                if(numProductPrice() == false){
+                    alert("상품가격에 숫자만 입력해주세요");
+                    return;
+                }
+
+                if(numProductQty() == false){
+                    alert("상품수량에 숫자만 입력해주세요");
+                    return;
+                }
+
                 // == 주의
                 if (sameCheck == false) {
                     alert("상품명 중복확인을 해 주세요.");
@@ -77,6 +98,36 @@
                     alert("상품이 등록되었습니다.");
                     console.log(sameCheck);
                 }
+
             });
+
+            // 상품등록
+            function blankProductName() {	// 상품명 공백 || 띄어쓰기 막아줌
+                let productName = $("#name").val();
+                let blank = /\s/g;
+                if(!productName || blank.test(productName)){
+                    return true;
+                }
+            }
+
+            function numProductPrice() {	// 상품가격에 숫자만 입력 가능
+                let productPrice = $("#price").val();
+                let numRule = /^[0-9]+$/;
+                if (numRule.test(productPrice)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            function numProductQty() {	// 상품수량에 숫자만 입력 가능
+                let productQty = $("#qty").val();
+                let numRule = /^[0-9]+$/;
+                if (numRule.test(productQty)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         </script>
         <%@ include file="../layout/footer.jsp" %>

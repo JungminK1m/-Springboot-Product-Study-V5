@@ -9,16 +9,10 @@
 		SELECT * FROM product_tb WHERE product_id = #{productId}
 	</select>
 
-	<select id="findByProductName"
-		resultType="shop.mtcoding.productapp_v5.model.product.Product">
-		SELECT * FROM product_tb WHERE product_name = #{productName}
-	</select>
-
 	<select id="findAll"
 		resultType="shop.mtcoding.productapp_v5.model.product.Product">
 		SELECT * FROM product_tb
 	</select>
-
 
     <update id="productQtyUpdate">
         Update product_tb
@@ -49,6 +43,7 @@
 		DELETE FROM product_tb WHERE product_id = #{productId}
 	</delete>
 
+	<!-- 중복 체크를 위한 product_name을 찾는 쿼리 -->
 	<select id = "findByName" resultType = "shop.mtcoding.productapp_v5.model.product.Product">
         select product_name from product_tb where product_name = #{productName}
     </select>

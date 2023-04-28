@@ -135,7 +135,7 @@
             let username = $("#name").val();
             let blank = /\s/g;
             if(!username || blank.test(username)){
-            return true;
+                return true;
                 }
             }
 
