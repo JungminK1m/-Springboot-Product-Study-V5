@@ -100,6 +100,11 @@ public class ProductController {
             throw new JoinCustomException(HttpStatus.BAD_REQUEST);
         }
 
+        // 상품 금액, 재고 0개 이하 막기
+        if (productSaveDto.getProductPrice() <= 0 || productSaveDto.getProductQty() <= 0) {
+            throw new JoinCustomException(HttpStatus.FORBIDDEN);
+        }
+
         // 기존 동일 상품 확인 (username,email만)
         if (productRepository.findByName(productSaveDto.getProductName()) != null) {
             throw new CustomException("이미 등록한 상품입니다.", HttpStatus.BAD_REQUEST);
@@ -177,6 +182,11 @@ public class ProductController {
         product.setProductPrice(productUpdateDto.getProductPrice());
         product.setProductQty(productUpdateDto.getProductQty());
         System.out.println("데이터 담음");
+
+        // 상품 금액, 재고 0개 이하 막기
+        if (product.getProductPrice() <= 0 || product.getProductQty() <= 0) {
+            throw new CustomException("상품 갯수가 0개 이하일 수 없습니다.", HttpStatus.FORBIDDEN);
+        }
 
         // 업데이트
         int result = productRepository.update(product);

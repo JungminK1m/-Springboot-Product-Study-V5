@@ -87,6 +87,12 @@
                     return;
                 }
 
+                // 상품 금액, 재고 0개 이하 막기
+                if(checkPriceQty() == false){
+                    alert("상품 갯수과 재고가 0개 이하일 수 없습니다.");
+                    return;
+                }
+
                 // == 주의
                 if (sameCheck == false) {
                     alert("상품명 중복확인을 해 주세요.");
@@ -127,6 +133,17 @@
                     return true;
                 } else {
                     return false;
+                }
+            }
+
+            // 상품 금액, 재고 0개 이하 막기
+            function checkPriceQty() {
+                let productPrice = $('#price').val();
+                let productQty = $("#qty").val();
+                if (productPrice <= 0 || productQty <=0) {
+                    return false
+                }else {
+                    return true;
                 }
             }
         </script>

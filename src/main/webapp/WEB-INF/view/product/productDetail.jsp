@@ -54,7 +54,7 @@
                         <%-- ADMIN일 때는 수정하기/삭제하기 버튼 뜨게 하기 --%>
                         <c:if test="${principal.role == 'ADMIN'}">
                             <div class="center" style="margin-top: 20px; text-align: center;">
-                                <form action="/product/${product.productId}/updateForm" method="get">
+                                <form action="/admin/product/${product.productId}/updateForm" method="get">
                                     <button
                                         style="width: 240px; height: 50px; margin-right: 20px; background-color: rgb(255, 210, 199);">수정하기</button>
                                 </form>
