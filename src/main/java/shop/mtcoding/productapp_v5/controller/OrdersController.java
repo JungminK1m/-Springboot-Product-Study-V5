@@ -20,6 +20,7 @@ import shop.mtcoding.productapp_v5.model.orders.OrdersRepository;
 import shop.mtcoding.productapp_v5.model.product.Product;
 import shop.mtcoding.productapp_v5.model.product.ProductRepository;
 import shop.mtcoding.productapp_v5.model.user.User;
+import shop.mtcoding.productapp_v5.service.OrdersService;
 
 @Controller
 public class OrdersController {
@@ -32,6 +33,9 @@ public class OrdersController {
 
     @Autowired
     private HttpSession session;
+
+    @Autowired
+    private OrdersService ordersService;
 
     // 구매 목록 페이지
     @GetMapping("/ordersList/{userId}")
@@ -73,17 +77,8 @@ public class OrdersController {
             throw new CustomException("재고보다 더 많은 수량을 구매할 수 없습니다.", HttpStatus.FORBIDDEN);
         }
 
-        // 구매를 하면 product qty가 차감되어야 함
-        productRepository.productQtyUpdate(ordersDto);
+        Integer userId = ordersService.구매하기(ordersDto, principal.getUserId());
 
-        // principal.getUserId() 너무 길어서 변수로 만듦
-        int userId = principal.getUserId();
-
-        /*
-         * 구매버튼 누르면 insert 됨
-         * 누가 구매했는 지 필요하기 때문에 userId도 같이 insert 해야 함
-         */
-        ordersRepository.insert(ordersDto, userId);
         return "redirect:/ordersList/" + userId;
 
     }
@@ -98,22 +93,7 @@ public class OrdersController {
             throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
         }
 
-        int userId = principal.getUserId();
-
-        System.out.println("userId : " + userId);
-
-        // productRepository.findById(productId);
-        // System.out.println("productId : " + productId);
-
-        // 구매 취소했으니 다시 product Qty 업데이트
-        // productRepository.productQtyReupdate(ordersDto);
-        // System.out.println("재고 : " + ordersDto.getOrdersQty());
-
-        Orders orders = ordersRepository.findById(ordersId);
-        productRepository.productQtyReupdate(orders);
-
-        // 주문 정보 삭제
-        ordersRepository.deleteById(ordersId);
+        Integer userId = ordersService.구매취소하기(ordersId);
 
         return "redirect:/ordersList/" + userId;
     }

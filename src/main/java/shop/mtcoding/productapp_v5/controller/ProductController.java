@@ -166,6 +166,12 @@ public class ProductController {
     @PostMapping("admin/product/{productId}/update")
     public String update(@PathVariable Integer productId, Model model, ProductUpdateDto productUpdateDto) {
 
+        // 관리자 로그인 한 사람만 상품 수정 가능
+        User principal = (User) session.getAttribute("principal");
+        if (principal == null || !principal.getRole().equals("ADMIN")) {
+            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+        }
+
         System.out.println("디버깅 : " + productId);
         Product p = productRepository.findById(productId);
         model.addAttribute("product", p);
@@ -211,6 +217,13 @@ public class ProductController {
     // 상품 삭제
     @PostMapping("admin/product/{ProductId}/delete")
     public String delete(@PathVariable Integer ProductId) {
+
+        // 관리자 로그인 한 사람만 상품 삭제 가능
+        User principal = (User) session.getAttribute("principal");
+        if (principal == null || !principal.getRole().equals("ADMIN")) {
+            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+        }
+
         int result = productRepository.deleteById(ProductId);
         if (result != 1) {
             throw new CustomException("삭제 실패", HttpStatus.BAD_REQUEST);
