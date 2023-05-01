@@ -12,7 +12,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         LoginInterceptor loginIntercepter = new LoginInterceptor();
         registry.addInterceptor(loginIntercepter)
-                .addPathPatterns("/**") // 적용할 URL, "/**" 는 모든 URL을 뜻함
+                .addPathPatterns("/userInfoUpdate", "/userInfo", "/userUpdateForm", "/ordersList/{userId}",
+                        "/orders/{productId}", "/ordersList/delete") // 적용할 URL, "/**" 는 모든 URL을 뜻함
+                .addPathPatterns("/admin")
                 .excludePathPatterns("/", "/product", "/product/{productId}", "/loginForm", "/joinForm",
                         "/admin/loginForm"); // 제외할 URL
     }

@@ -58,7 +58,7 @@
                                     <button
                                         style="width: 240px; height: 50px; margin-right: 20px; background-color: rgb(255, 210, 199);">수정하기</button>
                                 </form>
-                                <form action="/product/${product.productId}/delete" method="post">
+                                <form action="/admin/product/${product.productId}/delete" method="post">
                                     <button
                                         style="width: 240px; height: 50px; margin: auto; background-color: rgb(250, 255, 182);">삭제하기</button>
                                 </form>

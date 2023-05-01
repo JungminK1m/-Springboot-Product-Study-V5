@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import shop.mtcoding.productapp_v5.dto.product.ProductReqDto.ProductSaveDto;
 import shop.mtcoding.productapp_v5.dto.product.ProductReqDto.ProductUpdateDto;
+import shop.mtcoding.productapp_v5.enums.ResponseEnum;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
-import shop.mtcoding.productapp_v5.handler.exception.JoinCustomException;
 import shop.mtcoding.productapp_v5.model.product.Product;
 import shop.mtcoding.productapp_v5.model.product.ProductRepository;
 import shop.mtcoding.productapp_v5.model.user.User;
@@ -51,63 +51,63 @@ public class ProductController {
     }
 
     // 상품 등록 페이지
-    @GetMapping("admin/productSave")
+    @GetMapping("/admin/productSave")
     public String productSave() {
 
         // 관리자 로그인 한 사람만 구매할 수 있음
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
         return "product/productSave";
 
     }
 
     // 상품 수정 페이지
-    @GetMapping("admin/productUpdate")
+    @GetMapping("/admin/productUpdate")
     public String productUpdate() {
 
         // 관리자 로그인 한 사람만 업데이트 할 수 있음
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         return "product/productUpdate";
     }
 
     // 상품 등록
-    @PostMapping("admin/product/save")
+    @PostMapping("/admin/product/save")
     public String save(ProductSaveDto productSaveDto) {
 
         // 관리자 로그인 한 사람만 상품 등록할 수 있음
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         // 유효성 체크
         if (productSaveDto.getProductName().isEmpty()) {
             // System.out.println("JoinCustomException - userName 실행됨");
-            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.PRODUCT_NAME_EMPTY);
         }
         if (productSaveDto.getProductPrice() == null) {
             // System.out.println("JoinCustomException - userPassword 실행됨");
-            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.PRODUCT_PRICE_EMPTY);
         }
         if (productSaveDto.getProductQty() == null) {
             // System.out.println("JoinCustomException - userEmail 실행됨");
-            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.PRODUCT_QTY_EMPTY);
         }
 
         // 상품 금액, 재고 0개 이하 막기
         if (productSaveDto.getProductPrice() <= 0 || productSaveDto.getProductQty() <= 0) {
-            throw new JoinCustomException(HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.PRODUCT_PRICE_QTY_ZERO);
         }
 
         // 기존 동일 상품 확인 (username,email만)
         if (productRepository.findByName(productSaveDto.getProductName()) != null) {
-            throw new CustomException("이미 등록한 상품입니다.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.PRODUCT_NAME_ALREADY_SAVED);
         }
 
         // 새로운 상품 등록(insert)
@@ -120,7 +120,7 @@ public class ProductController {
 
         // result 가 1이 아니면 업데이트 안된 것
         if (result != 1) {
-            throw new CustomException("상품 등록을 실패했습니다.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.PRODUCT_UPDATE_FAIL);
         }
         // result == 1 업데이트 성공
         return "redirect:/product";
@@ -145,13 +145,13 @@ public class ProductController {
     }
 
     // 상품 수정 페이지
-    @GetMapping("admin/product/{productId}/updateForm")
+    @GetMapping("/admin/product/{productId}/updateForm")
     public String productUpdate(@PathVariable Integer productId, Model model) {
 
         // 관리자 로그인 한 사람만 상품 수정 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         // Product product = productRepository.findById(id);
@@ -163,13 +163,13 @@ public class ProductController {
     }
 
     // 상품 수정
-    @PostMapping("admin/product/{productId}/update")
+    @PostMapping("/admin/product/{productId}/update")
     public String update(@PathVariable Integer productId, Model model, ProductUpdateDto productUpdateDto) {
 
         // 관리자 로그인 한 사람만 상품 수정 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         System.out.println("디버깅 : " + productId);
@@ -191,7 +191,7 @@ public class ProductController {
 
         // 상품 금액, 재고 0개 이하 막기
         if (product.getProductPrice() <= 0 || product.getProductQty() <= 0) {
-            throw new CustomException("상품 갯수가 0개 이하일 수 없습니다.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.PRODUCT_QTY_NO_MORE_THAN_ZERO);
         }
 
         // 업데이트
@@ -207,7 +207,7 @@ public class ProductController {
 
         if (result != 1) {
             System.out.println("업데이트 실패");
-            throw new CustomException("업데이트 실패", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.PRODUCT_UPDATE_FAIL);
         }
         System.out.println("업데이트 완료");
 
@@ -215,18 +215,18 @@ public class ProductController {
     }
 
     // 상품 삭제
-    @PostMapping("admin/product/{ProductId}/delete")
+    @PostMapping("/admin/product/{ProductId}/delete")
     public String delete(@PathVariable Integer ProductId) {
 
         // 관리자 로그인 한 사람만 상품 삭제 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         int result = productRepository.deleteById(ProductId);
         if (result != 1) {
-            throw new CustomException("삭제 실패", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.PRODUCT_DELETE_FAIL);
         }
         return "redirect:/product";
     }

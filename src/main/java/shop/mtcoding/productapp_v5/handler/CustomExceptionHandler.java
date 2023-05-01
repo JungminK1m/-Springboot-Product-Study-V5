@@ -1,10 +1,12 @@
 package shop.mtcoding.productapp_v5.handler;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import shop.mtcoding.productapp_v5.dto.EnumResponseDto;
+import shop.mtcoding.productapp_v5.enums.ResponseEnum;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
-import shop.mtcoding.productapp_v5.handler.exception.JoinCustomException;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -17,26 +19,10 @@ public class CustomExceptionHandler {
     // exception터지면 다 여기로 올 거임! 무조건 뒤로가기
 
     @ExceptionHandler(CustomException.class)
-    public String basicException(Exception e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<script>");
-        sb.append("alert('" + e.getMessage() + "');");
-        sb.append("history.back();");
-        sb.append("</script>");
-        return sb.toString();
+    public ResponseEntity<EnumResponseDto<?>> customExceptionHandler(CustomException e) {
+        ResponseEnum responseEnum = e.getResponseEnum();
+        return ResponseEntity.status(responseEnum.getStatus())
+                .body(new EnumResponseDto<>(responseEnum.getMsg(), null));
     }
 
-    /*
-     * 기존 CustomException은 핸들러에서 alert 창을 띄우기 때문에, alert창을 안 띄우는 새로운 Exception을
-     * 생성했다.
-     * history.back이 있어야 회원가입 시에 예외가 생겨도 기존에 썼던 값이 지워지지 않기 때문에 만듦!
-     */
-    @ExceptionHandler(JoinCustomException.class)
-    public String basicException2(Exception e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<script>");
-        sb.append("history.back();");
-        sb.append("</script>");
-        return sb.toString();
-    }
 }

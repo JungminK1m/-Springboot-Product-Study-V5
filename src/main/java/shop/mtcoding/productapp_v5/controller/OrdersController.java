@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import shop.mtcoding.productapp_v5.dto.orders.AdminOrdersListDto;
 import shop.mtcoding.productapp_v5.dto.orders.OrdersDto;
+import shop.mtcoding.productapp_v5.enums.ResponseEnum;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
 import shop.mtcoding.productapp_v5.model.orders.Orders;
 import shop.mtcoding.productapp_v5.model.orders.OrdersRepository;
@@ -45,13 +45,13 @@ public class OrdersController {
 
         // 로그인 안한 사람이 주문목록 보려고 시도할 시
         if (principal == null) {
-            throw new CustomException("구매목록을 볼 권한이 없습니다.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.NO_ACCESS_TO_ORDERSLIST);
         }
 
         // 로그인 했지만 나 아닌 다른 사람의 주문목록 보려고 시도할 시
         // ! <- 논리 부정 연산자
         if (!principal.getUserId().equals(userId)) {
-            throw new CustomException("구매목록을 볼 권한이 없습니다.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.NO_ACCESS_TO_ORDERSLIST);
         }
 
         List<Orders> ordersList = ordersRepository.findAll(userId);
@@ -68,13 +68,13 @@ public class OrdersController {
         // 로그인 한 사람만 구매할 수 있음
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.PRINCIPAL_DOSE_NOT_EXIST);
         }
 
         // 상품수량보다 구매수량이 더 많으면 안됨
         Product productPS = productRepository.findById(productId);
         if (productPS.getProductQty() - ordersDto.getOrdersQty() < 0) {
-            throw new CustomException("재고보다 더 많은 수량을 구매할 수 없습니다.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.NO_MORE_THAN_PRODUCT_QTY);
         }
 
         Integer userId = ordersService.구매하기(ordersDto, principal.getUserId());
@@ -90,7 +90,7 @@ public class OrdersController {
         // 로그인 한 사람만
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.PRINCIPAL_DOSE_NOT_EXIST);
         }
 
         Integer userId = ordersService.구매취소하기(ordersId);
@@ -99,13 +99,13 @@ public class OrdersController {
     }
 
     // 관리자 - 유저 구매 목록 확인 페이지
-    @GetMapping("admin/userOrdersList")
+    @GetMapping("/admin/userOrdersList")
     public String adminOrdersList(Model model) {
 
         // 관리자 로그인 한 사람만 접근 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         List<AdminOrdersListDto> orderedList = ordersRepository.adminFindAll();

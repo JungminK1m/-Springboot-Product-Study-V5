@@ -19,9 +19,11 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         if (principal == null) {
             // 로그인되지 않은 사용자는 메인 페이지(상품 목록 페이지)로 이동
-            response.sendRedirect("/loginForm");
+            response.sendRedirect("/");
             return false;
         }
+        // 로그인한 사용자 정보를 session에 저장
+        session.setAttribute("principal", principal);
         return true;
     }
 

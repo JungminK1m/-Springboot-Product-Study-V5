@@ -21,8 +21,8 @@ import shop.mtcoding.productapp_v5.dto.user.AdminLoginDto;
 import shop.mtcoding.productapp_v5.dto.user.JoinDto;
 import shop.mtcoding.productapp_v5.dto.user.LoginDto;
 import shop.mtcoding.productapp_v5.dto.user.UpdateUserDto;
+import shop.mtcoding.productapp_v5.enums.ResponseEnum;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
-import shop.mtcoding.productapp_v5.handler.exception.JoinCustomException;
 import shop.mtcoding.productapp_v5.model.user.User;
 import shop.mtcoding.productapp_v5.model.user.UserRepository;
 
@@ -41,17 +41,17 @@ public class UserController {
 
         // 유효성 체크
         if (loginDto.getUserName().isEmpty()) {
-            throw new CustomException("username을 입력해 주세요.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_USERNAME_EMPTY);
         }
         if (loginDto.getUserPassword().isEmpty()) {
-            throw new CustomException("password를 입력해 주세요.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_PASSWORD_EMPTY);
         }
 
         // 가입된 유저인지 확인
         User userPS = userRepository.login(loginDto);
         if (userPS == null || !userPS.getRole().equals("USER")) {
             // 로그인 실패
-            throw new CustomException("아이디와 비밀번호를 확인해 주세요", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_LOGIN_INFO_DOSE_NOT_MATCH);
         }
 
         session.setAttribute("principal", userPS);
@@ -61,26 +61,31 @@ public class UserController {
     }
 
     // 관리자 로그인
-    @PostMapping("admin/login")
+    @PostMapping("/admin/login")
     public String adminLogin(AdminLoginDto adminLoginDto) {
 
         // 유효성 체크
         if (adminLoginDto.getUserName().isEmpty()) {
-            throw new CustomException("username을 입력해 주세요.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_USERNAME_EMPTY);
         }
+
         if (adminLoginDto.getUserPassword().isEmpty()) {
-            throw new CustomException("password를 입력해 주세요.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_PASSWORD_EMPTY);
         }
-        if (!adminLoginDto.getRole().equals("ADMIN")) {
-            throw new CustomException("접근 권한이 없습니다.", HttpStatus.BAD_REQUEST);
-        }
+
+        // null 오류!!!! 수정해야 함!
+        // System.out.println("관리자 로그인 패스워드 통과");
+        // if (!adminLoginDto.getRole().equals("ADMIN")) {
+        // throw new CustomException(ResponseEnum.ADMIN_CHECK_ROLE);
+        // }
+        // System.out.println("관리자 로그인 권한 체크 완료");
 
         User userPS = userRepository.adminLogin(adminLoginDto);
 
         if (userPS == null) {
 
             // 로그인 실패
-            throw new CustomException("아이디와 비밀번호를 확인해 주세요", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_LOGIN_INFO_DOSE_NOT_MATCH);
 
         }
 
@@ -97,23 +102,23 @@ public class UserController {
         // 유효성 체크
         if (joinDto.getUserName().isEmpty()) {
             // System.out.println("JoinCustomException - userName 실행됨");
-            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_USERNAME_EMPTY);
         }
         if (joinDto.getUserPassword().isEmpty()) {
             // System.out.println("JoinCustomException - userPassword 실행됨");
-            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_PASSWORD_EMPTY);
         }
         if (joinDto.getUserEmail().isEmpty()) {
             // System.out.println("JoinCustomException - userEmail 실행됨");
-            throw new JoinCustomException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_EMAIL_EMPTY);
         }
 
         // 기존 동일 유저 확인 (username,email만)
         if (userRepository.findByUserName(joinDto.getUserName()) != null) {
-            throw new CustomException("이미 가입된 유저입니다.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_JOIN_SAME_USERNAME);
         }
         if (userRepository.findByUserEmail(joinDto.getUserEmail()) != null) {
-            throw new CustomException("이미 가입된 이메일입니다.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.USER_JOIN_SAME_EMAIL);
         }
 
         userRepository.insert(joinDto);
@@ -140,20 +145,20 @@ public class UserController {
     }
 
     // 관리자 - 유저 삭제
-    @PostMapping("admin/deleteUser/{userId}")
+    @PostMapping("/admin/deleteUser/{userId}")
     public String deleteUser(@PathVariable Integer userId) {
 
         // 관리자 로그인 한 사람만 접근 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         int result = userRepository.delete(userId);
         if (result != 1) {
-            throw new CustomException("삭제 실패", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.ADMIN_DELETE_USER_FAIL);
         }
-        return "redirect:/userList";
+        return "redirect:/admin/userList";
     }
 
     // 유저 정보 수정 AJAX
@@ -186,7 +191,7 @@ public class UserController {
     }
 
     // 관리자 - 로그인 페이지
-    @GetMapping("admin/loginForm")
+    @GetMapping("/admin/loginForm")
     public String adminLoginForm() {
         return "user/adminLoginForm";
     }
@@ -199,13 +204,13 @@ public class UserController {
     }
 
     // 관리자 - 유저 목록 페이지
-    @GetMapping("admin/userList")
+    @GetMapping("/admin/userList")
     public String userList(Model model) {
 
         // 관리자 로그인 한 사람만 접근 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException("관리자 로그인을 먼저 해 주세요.", HttpStatus.FORBIDDEN);
+            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         List<User> userList = userRepository.findAll();
@@ -222,7 +227,7 @@ public class UserController {
         // 세션에 있는 사람 (=로그인 한 사람)만 접근 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.PRINCIPAL_DOSE_NOT_EXIST);
         }
 
         // 세션에 저장된 Id 값으로 본인 정보 불러와서 모델에 담기
@@ -239,7 +244,7 @@ public class UserController {
         // 세션에 있는 사람 (=로그인 한 사람)만 접근 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("로그인을 먼저 해 주세요.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(ResponseEnum.PRINCIPAL_DOSE_NOT_EXIST);
         }
 
         // 세션에 저장된 Id 값으로 본인 정보 불러와서 모델에 담기

@@ -2,15 +2,19 @@ package shop.mtcoding.productapp_v5.handler.exception;
 
 import org.springframework.http.HttpStatus;
 
+import shop.mtcoding.productapp_v5.enums.ResponseEnum;
+
 public class CustomException extends RuntimeException {
 
-    // 상태코드
-    private HttpStatus status;
+    private final ResponseEnum responseEnum;
 
-    // 생성자
-    public CustomException(String message, HttpStatus status) {
-        super(message);
-        this.status = status;
+    public CustomException(ResponseEnum responseEnum) {
+        super(responseEnum.getMsg());
+        this.responseEnum = responseEnum;
+    }
+
+    public ResponseEnum getResponseEnum() {
+        return responseEnum;
     }
 
 }
