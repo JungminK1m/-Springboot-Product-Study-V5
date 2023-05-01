@@ -71,19 +71,22 @@ public class UserController {
         if (adminLoginDto.getUserPassword().isEmpty()) {
             throw new CustomException("password를 입력해 주세요.", HttpStatus.BAD_REQUEST);
         }
+        if (!adminLoginDto.getRole().equals("ADMIN")) {
+            throw new CustomException("접근 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+        }
 
         User userPS = userRepository.adminLogin(adminLoginDto);
 
-        if (userPS == null || !userPS.getRole().equals("ADMIN")) {
+        if (userPS == null) {
 
             // 로그인 실패
             throw new CustomException("아이디와 비밀번호를 확인해 주세요", HttpStatus.BAD_REQUEST);
 
         }
 
+        // 로그인 성공
         session.setAttribute("principal", userPS);
 
-        // 로그인 성공
         return "redirect:/product";
 
     }
