@@ -49,15 +49,15 @@ public class UserController {
 
         // 가입된 유저인지 확인
         User userPS = userRepository.login(loginDto);
-        if (userPS != null && userPS.getRole().equals("USER")) {
-            session.setAttribute("principal", userPS);
-
-            // 로그인 성공
-            return "redirect:/product";
-
+        if (userPS == null || !userPS.getRole().equals("USER")) {
+            // 로그인 실패
+            throw new CustomException("아이디와 비밀번호를 확인해 주세요", HttpStatus.BAD_REQUEST);
         }
-        // 로그인 실패
-        throw new CustomException("아이디와 비밀번호를 확인해 주세요", HttpStatus.BAD_REQUEST);
+
+        session.setAttribute("principal", userPS);
+
+        // 로그인 성공
+        return "redirect:/product";
     }
 
     // 관리자 로그인
@@ -74,15 +74,17 @@ public class UserController {
 
         User userPS = userRepository.adminLogin(adminLoginDto);
 
-        if (userPS != null && userPS.getRole().equals("ADMIN")) {
+        if (userPS == null || !userPS.getRole().equals("ADMIN")) {
 
-            session.setAttribute("principal", userPS);
+            // 로그인 실패
+            throw new CustomException("아이디와 비밀번호를 확인해 주세요", HttpStatus.BAD_REQUEST);
 
-            // 로그인 성공
-            return "redirect:/product";
         }
-        // 로그인 실패
-        throw new CustomException("아이디와 비밀번호를 확인해 주세요", HttpStatus.BAD_REQUEST);
+
+        session.setAttribute("principal", userPS);
+
+        // 로그인 성공
+        return "redirect:/product";
 
     }
 

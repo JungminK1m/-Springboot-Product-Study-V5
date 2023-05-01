@@ -24,7 +24,13 @@
     <script>
     // 회원 정보 수정 AJAX
     $("#btnUpdateProfile").click(()=>{
-    userUpdate();
+
+        if (emailCheck() == false) {
+            alert("이메일 형식을 지켜주세요")
+            return;
+        }
+
+        userUpdate();
     });
 
 
@@ -50,6 +56,17 @@
             alert("회원정보 수정 실패");
         });
     }
+
+        function emailCheck() {	// email 형식
+        let email = $("#userEmail").val();
+        let emailRule = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+        if (emailRule.test(email)) {
+            return true;
+        } else {
+            return false;
+            }
+        }
+
     </script>
 
     <%@ include file="../layout/footer.jsp" %>

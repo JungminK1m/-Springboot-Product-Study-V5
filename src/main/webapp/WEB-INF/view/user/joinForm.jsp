@@ -45,7 +45,7 @@
             // 중복체크 여부 = false - 아직 체크 안했으니까
             let sameCheck = false;
 
-            // 상품명 중복체크
+            // 아이디 중복체크
             $('#CheckUsername').on('click', function () {
 
                 // 이렇게 데이터를 변수로 만들면 보기가 편하다
@@ -112,7 +112,7 @@
                 }
 
                 if (onlyEng() == false) {
-                    alert("이름은 영어로 입력해주세요")
+                    alert("이름은 영어로만 입력해주세요")
                     return;
                 }
                 
