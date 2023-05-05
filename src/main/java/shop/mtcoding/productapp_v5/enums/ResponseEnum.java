@@ -22,6 +22,7 @@ public enum ResponseEnum {
 
     USER_JOIN_SAME_USERNAME("이미 가입된 username 입니다.", HttpStatus.BAD_REQUEST),
     USER_JOIN_SAME_EMAIL("이미 가입된 email 입니다.", HttpStatus.BAD_REQUEST),
+    USER_UPDATE_SAME_EMAIL("이미 사용중인 email 입니다.", HttpStatus.BAD_REQUEST),
 
     PRODUCT_NAME_ALREADY_SAVED("이미 등록한 상품입니다.", HttpStatus.BAD_REQUEST),
     PRODUCT_QTY_NO_MORE_THAN_ZERO("상품 갯수가 0개 이하일 수 없습니다.", HttpStatus.BAD_REQUEST),

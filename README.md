@@ -40,6 +40,7 @@
   <br/>
 - 로그인 유효성 체크
 - 회원 정보 수정, 회원 탈퇴 AJAX 처리
+- CustomException을 ENUM으로 처리
   
    <br/>
 

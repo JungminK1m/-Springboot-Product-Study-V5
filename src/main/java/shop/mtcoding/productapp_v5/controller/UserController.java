@@ -165,6 +165,12 @@ public class UserController {
     @PostMapping("/userInfoUpdate")
     public @ResponseBody ResponseDto<?> userUpdate(@RequestBody UpdateUserDto updateUserDto) {
         User principal = (User) session.getAttribute("principal");
+
+        // 수정 시 이메일 유효성 검사 (다른 유저와 중복 방지)
+        User checkUserEmail = userRepository.findByUserEmail(updateUserDto.getUserEmail());
+        if (checkUserEmail != null && !checkUserEmail.getUserId().equals(principal.getUserId())) {
+            throw new CustomException(ResponseEnum.USER_UPDATE_SAME_EMAIL);
+        }
         userRepository.update(updateUserDto.toEntity(principal.getUserId()));
         return new ResponseDto<>(1, "회원정보수정성공", null);
     }
