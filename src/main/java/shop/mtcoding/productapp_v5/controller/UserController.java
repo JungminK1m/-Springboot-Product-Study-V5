@@ -22,6 +22,7 @@ import shop.mtcoding.productapp_v5.dto.user.JoinDto;
 import shop.mtcoding.productapp_v5.dto.user.LoginDto;
 import shop.mtcoding.productapp_v5.dto.user.UpdateUserDto;
 import shop.mtcoding.productapp_v5.enums.ResponseEnum;
+import shop.mtcoding.productapp_v5.handler.exception.CustomApiException;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
 import shop.mtcoding.productapp_v5.model.user.User;
 import shop.mtcoding.productapp_v5.model.user.UserRepository;
@@ -41,17 +42,17 @@ public class UserController {
 
         // 유효성 체크
         if (loginDto.getUserName().isEmpty()) {
-            throw new CustomException(ResponseEnum.USER_USERNAME_EMPTY);
+            throw new CustomApiException(ResponseEnum.USER_USERNAME_EMPTY);
         }
         if (loginDto.getUserPassword().isEmpty()) {
-            throw new CustomException(ResponseEnum.USER_PASSWORD_EMPTY);
+            throw new CustomApiException(ResponseEnum.USER_PASSWORD_EMPTY);
         }
 
         // 가입된 유저인지 확인
         User userPS = userRepository.login(loginDto);
         if (userPS == null || !userPS.getRole().equals("USER")) {
             // 로그인 실패
-            throw new CustomException(ResponseEnum.USER_LOGIN_INFO_DOSE_NOT_MATCH);
+            throw new CustomApiException(ResponseEnum.USER_LOGIN_INFO_DOSE_NOT_MATCH);
         }
 
         session.setAttribute("principal", userPS);
@@ -66,11 +67,11 @@ public class UserController {
 
         // 유효성 체크
         if (adminLoginDto.getUserName().isEmpty()) {
-            throw new CustomException(ResponseEnum.USER_USERNAME_EMPTY);
+            throw new CustomApiException(ResponseEnum.USER_USERNAME_EMPTY);
         }
 
         if (adminLoginDto.getUserPassword().isEmpty()) {
-            throw new CustomException(ResponseEnum.USER_PASSWORD_EMPTY);
+            throw new CustomApiException(ResponseEnum.USER_PASSWORD_EMPTY);
         }
 
         // null 오류!!!! 수정해야 함!
@@ -85,7 +86,7 @@ public class UserController {
         if (userPS == null) {
 
             // 로그인 실패
-            throw new CustomException(ResponseEnum.USER_LOGIN_INFO_DOSE_NOT_MATCH);
+            throw new CustomApiException(ResponseEnum.USER_LOGIN_INFO_DOSE_NOT_MATCH);
 
         }
 
@@ -102,23 +103,23 @@ public class UserController {
         // 유효성 체크
         if (joinDto.getUserName().isEmpty()) {
             // System.out.println("JoinCustomException - userName 실행됨");
-            throw new CustomException(ResponseEnum.USER_USERNAME_EMPTY);
+            throw new CustomApiException(ResponseEnum.USER_USERNAME_EMPTY);
         }
         if (joinDto.getUserPassword().isEmpty()) {
             // System.out.println("JoinCustomException - userPassword 실행됨");
-            throw new CustomException(ResponseEnum.USER_PASSWORD_EMPTY);
+            throw new CustomApiException(ResponseEnum.USER_PASSWORD_EMPTY);
         }
         if (joinDto.getUserEmail().isEmpty()) {
             // System.out.println("JoinCustomException - userEmail 실행됨");
-            throw new CustomException(ResponseEnum.USER_EMAIL_EMPTY);
+            throw new CustomApiException(ResponseEnum.USER_EMAIL_EMPTY);
         }
 
         // 기존 동일 유저 확인 (username,email만)
         if (userRepository.findByUserName(joinDto.getUserName()) != null) {
-            throw new CustomException(ResponseEnum.USER_JOIN_SAME_USERNAME);
+            throw new CustomApiException(ResponseEnum.USER_JOIN_SAME_USERNAME);
         }
         if (userRepository.findByUserEmail(joinDto.getUserEmail()) != null) {
-            throw new CustomException(ResponseEnum.USER_JOIN_SAME_EMAIL);
+            throw new CustomApiException(ResponseEnum.USER_JOIN_SAME_EMAIL);
         }
 
         userRepository.insert(joinDto);
@@ -151,12 +152,12 @@ public class UserController {
         // 관리자 로그인 한 사람만 접근 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
+            throw new CustomApiException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         int result = userRepository.delete(userId);
         if (result != 1) {
-            throw new CustomException(ResponseEnum.ADMIN_DELETE_USER_FAIL);
+            throw new CustomApiException(ResponseEnum.ADMIN_DELETE_USER_FAIL);
         }
         return "redirect:/admin/userList";
     }
@@ -169,7 +170,7 @@ public class UserController {
         // 수정 시 이메일 유효성 검사 (다른 유저와 중복 방지)
         User checkUserEmail = userRepository.findByUserEmail(updateUserDto.getUserEmail());
         if (checkUserEmail != null && !checkUserEmail.getUserId().equals(principal.getUserId())) {
-            throw new CustomException(ResponseEnum.USER_UPDATE_SAME_EMAIL);
+            throw new CustomApiException(ResponseEnum.USER_UPDATE_SAME_EMAIL);
         }
         userRepository.update(updateUserDto.toEntity(principal.getUserId()));
         return new ResponseDto<>(1, "회원정보수정성공", null);

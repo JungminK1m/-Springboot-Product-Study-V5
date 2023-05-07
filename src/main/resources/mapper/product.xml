@@ -48,4 +48,17 @@
         select product_name from product_tb where product_name = #{productName}
     </select>
 
+	<!-- 페이징 - 상품 전체 목록 조회 쿼리 -->
+	<!-- parameterType="shop.mtcoding.productapp_v5.model.paging.Criteria" 써야 할까? -->
+	<select id = "pagingProductList" resultType = "shop.mtcoding.productapp_v5.model.product.Product">
+        SELECT * FROM product_tb
+		ORDER BY product_id DESC
+		LIMIT #{pageNum} OFFSET #{pageAmount}
+    </select>
+
+	<!-- 페이징 - 상품 총 갯수 조회 쿼리 -->
+	<select id="pagingProductCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM product_tb
+	</select>
+
 </mapper>

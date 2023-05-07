@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import shop.mtcoding.productapp_v5.dto.product.ProductReqDto.ProductSaveDto;
 import shop.mtcoding.productapp_v5.dto.product.ProductReqDto.ProductUpdateDto;
 import shop.mtcoding.productapp_v5.enums.ResponseEnum;
+import shop.mtcoding.productapp_v5.handler.exception.CustomApiException;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
+import shop.mtcoding.productapp_v5.model.paging.Criteria;
+import shop.mtcoding.productapp_v5.model.paging.PagingVO;
 import shop.mtcoding.productapp_v5.model.product.Product;
 import shop.mtcoding.productapp_v5.model.product.ProductRepository;
 import shop.mtcoding.productapp_v5.model.user.User;
@@ -40,6 +44,30 @@ public class ProductController {
         return "product/productList";
     }
 
+    // // 상품 목록 페이지
+    // @GetMapping({ "/product", "/" })
+    // public String productList(@RequestParam(required = false, defaultValue = "1")
+    // int page, Criteria criteria,
+    // Model model) {
+
+    // List<Product> productList = productRepository.pagingProductList(criteria);
+
+    // // 총 상품 갯수를 가져옴
+    // int totalCount = productRepository.pagingProductCount();
+
+    // // 페이징 처리를 위한 객체 생성
+    // PagingVO pagingVO = new PagingVO();
+    // pagingVO.setPage(page);
+    // pagingVO.setTotal(totalCount);
+    // // pagingVO.setSize(3); // 한 페이지당 10개씩 보여줌(필드에 이미 설정함)
+    // pagingVO.setPageSize(5); // 페이지 번호는 5개씩 보여줌
+
+    // model.addAttribute("productList", productList);
+    // model.addAttribute("pagingVO", pagingVO);
+
+    // return "product/productList";
+    // }
+
     // 상품 상세 페이지
     @GetMapping("/product/{productId}")
     public String productDetail(@PathVariable Integer productId, Model model) {
@@ -57,7 +85,7 @@ public class ProductController {
         // 관리자 로그인 한 사람만 구매할 수 있음
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
+            throw new CustomApiException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
         return "product/productSave";
 
@@ -70,7 +98,7 @@ public class ProductController {
         // 관리자 로그인 한 사람만 업데이트 할 수 있음
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
+            throw new CustomApiException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         return "product/productUpdate";
@@ -83,31 +111,31 @@ public class ProductController {
         // 관리자 로그인 한 사람만 상품 등록할 수 있음
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
+            throw new CustomApiException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         // 유효성 체크
         if (productSaveDto.getProductName().isEmpty()) {
             // System.out.println("JoinCustomException - userName 실행됨");
-            throw new CustomException(ResponseEnum.PRODUCT_NAME_EMPTY);
+            throw new CustomApiException(ResponseEnum.PRODUCT_NAME_EMPTY);
         }
         if (productSaveDto.getProductPrice() == null) {
             // System.out.println("JoinCustomException - userPassword 실행됨");
-            throw new CustomException(ResponseEnum.PRODUCT_PRICE_EMPTY);
+            throw new CustomApiException(ResponseEnum.PRODUCT_PRICE_EMPTY);
         }
         if (productSaveDto.getProductQty() == null) {
             // System.out.println("JoinCustomException - userEmail 실행됨");
-            throw new CustomException(ResponseEnum.PRODUCT_QTY_EMPTY);
+            throw new CustomApiException(ResponseEnum.PRODUCT_QTY_EMPTY);
         }
 
         // 상품 금액, 재고 0개 이하 막기
         if (productSaveDto.getProductPrice() <= 0 || productSaveDto.getProductQty() <= 0) {
-            throw new CustomException(ResponseEnum.PRODUCT_PRICE_QTY_ZERO);
+            throw new CustomApiException(ResponseEnum.PRODUCT_PRICE_QTY_ZERO);
         }
 
         // 기존 동일 상품 확인 (username,email만)
         if (productRepository.findByName(productSaveDto.getProductName()) != null) {
-            throw new CustomException(ResponseEnum.PRODUCT_NAME_ALREADY_SAVED);
+            throw new CustomApiException(ResponseEnum.PRODUCT_NAME_ALREADY_SAVED);
         }
 
         // 새로운 상품 등록(insert)
@@ -120,7 +148,7 @@ public class ProductController {
 
         // result 가 1이 아니면 업데이트 안된 것
         if (result != 1) {
-            throw new CustomException(ResponseEnum.PRODUCT_UPDATE_FAIL);
+            throw new CustomApiException(ResponseEnum.PRODUCT_UPDATE_FAIL);
         }
         // result == 1 업데이트 성공
         return "redirect:/product";
@@ -151,7 +179,7 @@ public class ProductController {
         // 관리자 로그인 한 사람만 상품 수정 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
+            throw new CustomApiException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         // Product product = productRepository.findById(id);
@@ -169,7 +197,7 @@ public class ProductController {
         // 관리자 로그인 한 사람만 상품 수정 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
+            throw new CustomApiException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         System.out.println("디버깅 : " + productId);
@@ -191,7 +219,7 @@ public class ProductController {
 
         // 상품 금액, 재고 0개 이하 막기
         if (product.getProductPrice() <= 0 || product.getProductQty() <= 0) {
-            throw new CustomException(ResponseEnum.PRODUCT_QTY_NO_MORE_THAN_ZERO);
+            throw new CustomApiException(ResponseEnum.PRODUCT_QTY_NO_MORE_THAN_ZERO);
         }
 
         // 업데이트
@@ -207,7 +235,7 @@ public class ProductController {
 
         if (result != 1) {
             System.out.println("업데이트 실패");
-            throw new CustomException(ResponseEnum.PRODUCT_UPDATE_FAIL);
+            throw new CustomApiException(ResponseEnum.PRODUCT_UPDATE_FAIL);
         }
         System.out.println("업데이트 완료");
 
@@ -221,12 +249,12 @@ public class ProductController {
         // 관리자 로그인 한 사람만 상품 삭제 가능
         User principal = (User) session.getAttribute("principal");
         if (principal == null || !principal.getRole().equals("ADMIN")) {
-            throw new CustomException(ResponseEnum.ADMIN_LOGIN_FAIL);
+            throw new CustomApiException(ResponseEnum.ADMIN_LOGIN_FAIL);
         }
 
         int result = productRepository.deleteById(ProductId);
         if (result != 1) {
-            throw new CustomException(ResponseEnum.PRODUCT_DELETE_FAIL);
+            throw new CustomApiException(ResponseEnum.PRODUCT_DELETE_FAIL);
         }
         return "redirect:/product";
     }

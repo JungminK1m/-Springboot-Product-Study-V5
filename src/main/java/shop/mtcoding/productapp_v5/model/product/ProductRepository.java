@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import shop.mtcoding.productapp_v5.dto.orders.OrdersDto;
 import shop.mtcoding.productapp_v5.dto.product.ProductReqDto.ProductSaveDto;
 import shop.mtcoding.productapp_v5.model.orders.Orders;
+import shop.mtcoding.productapp_v5.model.paging.Criteria;
 
 @Mapper
 public interface ProductRepository {
@@ -32,4 +33,9 @@ public interface ProductRepository {
     // ajax 중복체크를 위한 메서드
     public Product findByName(String productName);
 
+    // 페이징 - 상품 전체 목록 조회 쿼리
+    public List<Product> pagingProductList(Criteria criteria);
+
+    // 페이징 - 상품 총 갯수 조회 쿼리
+    public Integer pagingProductCount();
 }

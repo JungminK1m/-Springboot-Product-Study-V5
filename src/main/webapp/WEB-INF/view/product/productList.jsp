@@ -22,5 +22,19 @@
                 </tbody>
             </table>
         </div>
-
+        <%-- <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item ${pagingVO.page == 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="${pagingVO.page == 1 ? '#' : '/product?page=' + (pagingVO.page - 1)}">이전</a>
+                </li>
+                <c:forEach begin="${pagingVO.startPage}" end="${pagingVO.endPage}" var="num">
+                    <li class="page-item ${pagingVO.page == num ? 'active' : ''}">
+                        <a class="page-link" href="/product?page=${num}">${num}</a>
+                    </li>
+                </c:forEach>
+                <li class="page-item ${pagingVO.page == pagingVO.realEndPage ? 'disabled' : ''}">
+                    <a class="page-link" href="${pagingVO.page == pagingVO.realEndPage ? '#' : '/product?page=' + (pagingVO.page + 1)}">다음</a>
+                </li>
+            </ul>
+        </nav> --%>
         <%@ include file="../layout/footer.jsp" %>
