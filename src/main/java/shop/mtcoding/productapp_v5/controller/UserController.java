@@ -42,17 +42,17 @@ public class UserController {
 
         // 유효성 체크
         if (loginDto.getUserName().isEmpty()) {
-            throw new CustomApiException(ResponseEnum.USER_USERNAME_EMPTY);
+            throw new CustomException(ResponseEnum.USER_USERNAME_EMPTY);
         }
         if (loginDto.getUserPassword().isEmpty()) {
-            throw new CustomApiException(ResponseEnum.USER_PASSWORD_EMPTY);
+            throw new CustomException(ResponseEnum.USER_PASSWORD_EMPTY);
         }
 
         // 가입된 유저인지 확인
         User userPS = userRepository.login(loginDto);
         if (userPS == null || !userPS.getRole().equals("USER")) {
             // 로그인 실패
-            throw new CustomApiException(ResponseEnum.USER_LOGIN_INFO_DOSE_NOT_MATCH);
+            throw new CustomException(ResponseEnum.USER_LOGIN_INFO_DOSE_NOT_MATCH);
         }
 
         session.setAttribute("principal", userPS);
@@ -103,23 +103,23 @@ public class UserController {
         // 유효성 체크
         if (joinDto.getUserName().isEmpty()) {
             // System.out.println("JoinCustomException - userName 실행됨");
-            throw new CustomApiException(ResponseEnum.USER_USERNAME_EMPTY);
+            throw new CustomException(ResponseEnum.USER_USERNAME_EMPTY);
         }
         if (joinDto.getUserPassword().isEmpty()) {
             // System.out.println("JoinCustomException - userPassword 실행됨");
-            throw new CustomApiException(ResponseEnum.USER_PASSWORD_EMPTY);
+                throw new CustomException(ResponseEnum.USER_PASSWORD_EMPTY);
         }
         if (joinDto.getUserEmail().isEmpty()) {
             // System.out.println("JoinCustomException - userEmail 실행됨");
-            throw new CustomApiException(ResponseEnum.USER_EMAIL_EMPTY);
+            throw new CustomException(ResponseEnum.USER_EMAIL_EMPTY);
         }
 
         // 기존 동일 유저 확인 (username,email만)
         if (userRepository.findByUserName(joinDto.getUserName()) != null) {
-            throw new CustomApiException(ResponseEnum.USER_JOIN_SAME_USERNAME);
+            throw new CustomException(ResponseEnum.USER_JOIN_SAME_USERNAME);
         }
         if (userRepository.findByUserEmail(joinDto.getUserEmail()) != null) {
-            throw new CustomApiException(ResponseEnum.USER_JOIN_SAME_EMAIL);
+            throw new CustomException(ResponseEnum.USER_JOIN_SAME_EMAIL);
         }
 
         userRepository.insert(joinDto);

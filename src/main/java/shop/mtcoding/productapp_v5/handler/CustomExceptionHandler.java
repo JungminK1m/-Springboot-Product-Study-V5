@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import shop.mtcoding.productapp_v5.dto.EnumResponseDto;
+import shop.mtcoding.productapp_v5.dto.ResponseDto;
 import shop.mtcoding.productapp_v5.enums.ResponseEnum;
 import shop.mtcoding.productapp_v5.handler.exception.CustomApiException;
 import shop.mtcoding.productapp_v5.handler.exception.CustomException;
@@ -30,10 +31,10 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(CustomApiException.class)
-    public ResponseEntity<EnumResponseDto<?>> customExceptionHandler(CustomApiException e) {
+    public ResponseEntity<?> customExceptionHandler(CustomApiException e) {
         ResponseEnum responseEnum = e.getResponseEnum();
-        return ResponseEntity.status(responseEnum.getStatus())
-                .body(new EnumResponseDto<>(responseEnum.getMsg(), null));
+        ResponseDto<?> responseDto = new ResponseDto<>(-1, responseEnum.getMsg(), null);
+        return new ResponseEntity<>(responseDto, responseEnum.getStatus());
     }
 
 }
