@@ -132,17 +132,22 @@ public class UserController {
     public ResponseEntity<?> CheckUsername(@RequestParam String userName) {
 
         // 디버깅
-        System.out.println("userName : " + userName);
+        System.out.println("userName : [" + userName+"]");
 
+        if(userName == null || userName.length() == 0){
+            System.out.println("여기 걸림?");
+            throw new CustomApiException(ResponseEnum.USER_USERNAME_EMPTY);
+        }
+        System.out.println("여기도 실행됨?");
         // DB에 중복이 된 값이 있는 지 확인
         User un = userRepository.findByUserName(userName);
 
         if (un != null) {
-            // pn이 있다면 flase 반환
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+            throw new CustomApiException(ResponseEnum.USER_JOIN_SAME_USERNAME);
         }
         // pn == null 기존에 없던 유저이기 때문에 true 반환
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        ResponseDto<?> responseDto = new ResponseDto<>(1, "중복체크완료", null);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     // 관리자 - 유저 삭제

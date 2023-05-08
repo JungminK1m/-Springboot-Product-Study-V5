@@ -54,32 +54,34 @@
         // 이렇게 데이터를 변수로 만들면 보기가 편하다
         let data = {userName: $('#name').val()}
 
-        if (blankUserName() == true) {
-            alert("이름을 입력해 주세요.");
-            return; // 조건문을 빠져나가기 위해
-        }
+        // if (blankUserName() == true) {
+        //     alert("이름을 입력해 주세요.");
+        //     return; // 조건문을 빠져나가기 위해
+        // }
 
-        if (onlyEng() == false) {
-            alert("이름은 영어로 입력해주세요")
-            return;
-        }
+        // if (onlyEng() == false) {
+        //     alert("이름은 영어로 입력해주세요")
+        //     return;
+        // }
 
         $.ajax({
-            url: '/join/checkName/',
+            url: '/join/checkName',
             type: 'post',
             data: data,
             contentType: "application/x-www-form-urlencoded; charset=utf-8"
 
-        }).done((res) => {
-            alert("등록 가능한 유저입니다")
+        }).done((res) => { // 200
+            alert(res.msg);
             // 콘솔창 확인용
             console.log(res);
             console.log("sameCheck : " + sameCheck);
             // 등록 가능하니까 체크 여부를 true로 변경
+
+
             sameCheck = true;
 
-        }).fail((err) => {
-            alert("이미 등록된 유저입니다")
+        }).fail((err) => { // 200 이 아닌 모든것
+            alert(err.responseJSON.msg);
             // 콘솔창 확인용
             console.log(err);
             console.log("sameCheck : " + sameCheck);

@@ -21,6 +21,7 @@ public class CustomExceptionHandler {
     // exception터지면 다 여기로 올 거임! 무조건 뒤로가기
     @ExceptionHandler(CustomException.class)
     public String basicException(CustomException e) {
+        System.out.println("여기 탔지?");
         ResponseEnum responseEnum = e.getResponseEnum();
         StringBuilder sb = new StringBuilder();
         sb.append("<script>");
