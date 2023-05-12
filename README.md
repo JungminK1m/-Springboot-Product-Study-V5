@@ -1,4 +1,17 @@
 # 쇼핑몰 프로젝트 5단계 📦
+# 시연 영상 🎥
+##### 사진을 누르면 유튜브로 이동합니다
+[![5조 시연영상](https://img.youtube.com/vi/aEpCiDY8tpI/0.jpg)](https://www.youtube.com/watch?v=aEpCiDY8tpI)
+<br/><br/>
+
+
+# PPT 📊
+[5조 파이널 프로젝트.pdf](https://github.com/JungminK1m/Springboot-Product-Study-V5/files/11458707/5.pdf)
+<br/><br/>
+
+
+# 화면 구현 📺
+
 ### 관리자(판매자)👷‍♀️👷‍♂️
 - 상품 등록, 수정, 삭제하기
 - 상품 목록보기
